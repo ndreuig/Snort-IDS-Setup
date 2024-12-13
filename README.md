@@ -331,19 +331,11 @@ cd ~/snort
 Download the DAQ source code:
 
 ```bash
-wget https://github.com/snort3/libdaq/archive/refs/tags/v3.0.13.tar.gz -O libdaq-3.0.13.tar.gz
+git clone https://github.com/snort3/libdaq.git
 ```
-
-Extract the tarball:
-
+Change into the libdaq directory:
 ```bash
-tar -xzvf libdaq-3.0.13.tar.gz
-```
-
-Change into the DAQ directory:
-
-```bash
-cd libdaq-3.0.13
+cd libdaq
 ```
 
 Run the bootstrap script to prepare the build environment:
@@ -459,3 +451,196 @@ sudo make install
 ```
 
 This will install Snort 3 on your system.
+
+
+## Disable Generic and Large Receive Offloads (GRO & LRO) using a Systemd Service
+
+To disable Generic and Large Receive Offloads on network cards, follow the steps outlined below. Disabling these offloads is necessary for accurate packet inspection and analysis.
+
+1. Identify Network Adapter Name
+
+Run the command ```ip a``` to determine the name of your network adapter.
+
+2. Verify Current Offload Settings
+
+Use the command ```sudo ethtool -k <network_adapter_name> | grep receive-offload``` to check the current status of GRO and LRO. Replace ```<network_adapter_name>``` with the actual name of your network adapter.
+
+3. Create a Systemd Service
+
+Create a new file ```/etc/systemd/system/ethtool.service``` using the command ```sudo nano /etc/systemd/system/ethtool.service```. Paste the following configuration into the file:
+
+```bash
+[Unit]
+Description=Ethtool Configuration for Network Interface
+
+[Service]
+Requires=network.target
+Type=oneshot
+ExecStart=/sbin/ethtool -K <network_adapter_name> gro off
+ExecStart=/sbin/ethtool -K <network_adapter_name> lro off
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Replace ```<network_adapter_name>``` with the actual name of your network adapter.
+
+4. Save and Close the File
+
+Save the file by pressing ```Ctrl + X```, then ```Y```, and finally ```Enter```.
+
+5. Set File Permissions
+
+Set the file permissions using the command ```sudo chmod 644 /etc/systemd/system/ethtool.service```.
+
+6. Reload Systemd Daemon
+
+Reload the systemd daemon to pick up the changes using the command ```sudo systemctl daemon-reload```.
+
+7. Enable and Start the Service
+
+Enable the service by running ```sudo systemctl enable ethtool.service```. Start the service using ```sudo systemctl start ethtool.service```.
+
+8. Verify Service Status
+
+Verify that the service is running and there are no errors using the command ```sudo systemctl status ethtool.service```.
+
+9. Verify Offload Settings
+
+Verify that the offload settings have been applied correctly using the command ```sudo ethtool -k <network_adapter_name> | grep receive-offload```.
+
+
+
+## Creating a Custom Rule for Snort to Detect ICMP Traffic
+
+To create a custom rule for Snort to detect ICMP traffic, we will begin by creating a file called local.rules.
+
+1. Create a Directory for Rules
+Create a directory to store the rules file:
+
+```bash
+sudo mkdir /usr/local/etc/rules
+```
+
+2. Create a File for Local Rules
+
+Create a file called ```local.rules``` in the newly created directory:
+
+```bash
+sudo nano /usr/local/etc/rules/local.rules
+```
+
+3. Create a Basic Alert Rule
+
+In the ```local.rules``` file, add the following basic alert rule:
+
+```bash
+alert icmp any any -> any any (msg:"ICMP Detected"; sid:1000001;)
+```
+This rule tells Snort to alert whenever it detects ICMP traffic. The rule consists of the following components:
+
+  - ```alert```: The type of rule (in this case, an alert). This means that when the rule is triggered, Snort will generate an alert.
+  - ```icmp```: The protocol to detect (in this case, ICMP). This specifies that the rule is looking for ICMP traffic.
+  - ```any any```: The source address and port (in this case, any address and port). This means that the rule will match any source IP address and any source port.
+  - ```->```: The direction of the traffic (in this case, from any source to any destination). This arrow indicates the direction of the traffic flow.
+  - ```any any```: The destination address and port (in this case, any address and port). This means that the rule will match any destination IP address and any destination port.
+  - ```msg```: The message to output when the rule is triggered (in this case, "ICMP Detected"). This is the message that will be displayed when the rule is triggered.
+  - ```sid```: The signature ID (in this case, 1000001). This is a unique identifier for the rule. Note that the signature ID starts at 1000001 because the numbers 0 to 999999 are reserved by Snort itself.
+
+4. Test the Rule
+
+To test the rule, run Snort with the following command:
+
+```bash
+snort --daq-dir /usr/local/lib/daq -T -c /usr/local/etc/snort/snort.lua -R /usr/local/etc/rules/local.rules
+```
+
+5. Modify the Snort Configuration
+ 
+To modify the Snort configuration to include the ```local.rules``` file, edit the ```snort.lua``` file:
+
+```bash
+sudo nano /usr/local/etc/snort/snort.lua
+```
+
+Change the ```HOME_NET``` Parameter:
+
+Locate the ```HOME_NET``` configuration line and replace it with your actual ```IP address```.
+
+Example of replacing ```192.168.1.0``` with your IP or network:
+
+```bash
+HOME_NET = "YOUR_IP_ADDRESS"  -- Replace YOUR_IP_ADDRESS with your actual IP
+```
+
+Add the following line to the file:
+
+```bash
+include = "/usr/local/etc/rules/local.rules",
+```
+
+This line tells Snort to include the ```local.rules``` file when it starts. The comma at the end of the line is important, as it indicates that this is not the last line in the file.
+
+Save the file and run Snort again without specifying the rules location:
+
+```bash
+snort --daq-dir /usr/local/lib/daq -T -c /usr/local/etc/snort/snort.lua -i eth0 -A alert_fast
+```
+
+
+
+
+## Configuring Pulled Pork for Snort Rule Management
+
+We can start expanding our rule set by downloading free rules and to do that we will install what is called Pulled Pork which will automatically grab the rules for you.
+
+1. Clone the Pulled Pork repository:
+```bash
+git clone https://github.com/shirkdog/pulledpork3.git
+```
+This command will download the Pulled Pork repository to your current directory.
+
+2. Change into the Pulled Pork directory:
+```bash
+cd ~/snort/pulledpork3
+```
+Make sure you're in the correct directory before proceeding.
+
+3. Create a new directory for Pulled Pork in /usr/local/bin:
+```bash
+sudo mkdir /usr/local/bin/pulledpork3
+```
+This directory will hold the Pulled Pork executable and its dependencies.
+
+4. Copy the Pulled Pork executable to the new directory:
+```bash
+sudo cp pulledpork.py /usr/local/bin/pulledpork3
+```
+This command copies the Pulled Pork executable to the new directory.
+
+5. Copy the Pulled Pork library to the new directory:
+```bash
+sudo cp -r lib/ /usr/local/bin/pulledpork3
+```
+This command copies the Pulled Pork library to the new directory.
+
+6. Make the Pulled Pork executable executable:
+```bash
+sudo chmod +x /usr/local/bin/pulledpork3/pulledpork.py
+```
+This command changes the permissions of the Pulled Pork executable to make it executable.
+
+7. Create a new directory for Pulled Pork configuration files:
+```bash
+sudo mkdir /usr/local/etc/pulledpork3
+```
+This directory will hold the Pulled Pork configuration files.
+
+8. Copy the Pulled Pork configuration file to the new directory:
+
+```bash
+sudo cp etc/pulledpork.conf /usr/local/etc/pulledpork3/
+```
+This command copies the Pulled Pork configuration file to the new directory.
+
+After completing these steps, you should have Pulled Pork installed and configured to manage Snort rules.
