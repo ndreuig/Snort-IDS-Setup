@@ -567,7 +567,7 @@ Change the ```HOME_NET``` Parameter:
 
 Locate the ```HOME_NET``` configuration line and replace it with your actual ```IP address```.
 
-Example of replacing ```192.168.1.0``` with your IP or network:
+Example of replacing ```192.168.1.0/24``` with your IP or network:
 
 ```bash
 HOME_NET = "YOUR_IP_ADDRESS"  -- Replace YOUR_IP_ADDRESS with your actual IP
