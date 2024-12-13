@@ -644,3 +644,149 @@ sudo cp etc/pulledpork.conf /usr/local/etc/pulledpork3/
 This command copies the Pulled Pork configuration file to the new directory.
 
 After completing these steps, you should have Pulled Pork installed and configured to manage Snort rules.
+
+**Verify Pulled Pork is Running**
+
+To verify that Pulled Pork is running, specify the location of Pulled Pork:
+
+```bash
+/usr/local/bin/pulledpork3/pulledpork.py -V
+```
+
+
+## Configuring Pulled Pork
+# Configuring PulledPork3 for Snort Rules Management
+
+This guide walks you through modifying the PulledPork3 configuration file and integrating it with Snort rules. Follow these steps carefully to ensure a successful setup.
+
+---
+
+## Step 1: Edit the PulledPork Configuration File
+
+1. Open the PulledPork configuration file with the following command:
+   ```bash
+   sudo nano /usr/local/etc/pulledpork3/pulledpork.conf
+   ```
+
+2. In the configuration file:
+   - Locate the `registered_rules` setting and change its value from `false` to `true`.
+   ```
+   registered_rules=true
+   ```
+
+3. Go to Snort’s website:
+   - Create and verify your Snort account if you haven't already.
+   - On the left-hand side of the dashboard, find the "Oinkcode" (API code).
+   - Copy the Oinkcode to use later.
+
+4. Return to the terminal and paste your Oinkcode into the `oinkcode` field of the configuration file.
+
+5. Locate the `blocklist_path` setting and comment it out by placing a `#` at the beginning of the line, as this is not needed:
+   ```
+   #blocklist_path=/path/to/blocklist
+   ```
+
+6. Scroll down to the `snort_path` setting:
+   - Uncomment the line by removing the `#` at the beginning.
+   - Verify that the path is correctly set to your Snort executable.
+   ```
+   snort_path=/usr/local/bin/snort
+   ```
+
+7. Further down, locate the `local_rules` setting:
+   - Uncomment the line.
+   - Ensure it points to the directory containing your local rules.
+   - Remove the trailing comma and any text following it.
+   ```
+   local_rules=/usr/local/etc/snort/rules/local.rules
+   ```
+
+8. Save and exit the file:
+   - Press `Ctrl+O` to save.
+   - Press `Ctrl+X` to exit.
+
+---
+
+## Step 2: Create the `so_rules` Directory
+
+1. Navigate to the `/usr/local/etc` directory:
+   ```bash
+   cd /usr/local/etc/
+   ```
+
+2. Verify the directory contents:
+   ```bash
+   ls
+   ```
+
+3. Create a new directory named `so_rules`:
+   ```bash
+   sudo mkdir so_rules
+   ```
+
+---
+
+#### Update PulledPork Script for Snort Rules
+
+1. Access the PulledPork script:
+   ```bash
+   sudo nano /usr/local/bin/pulledpork3/pulledpork.py
+   ```
+
+2. Scroll to the `RULESET_URL_SNORT_REGISTERED` setting:
+   - Replace `<VERSION>` with the actual version number obtained from the Snort website.
+   - For example, if the version is `31470`, modify the line as follows:
+   ```
+   RULESET_URL_SNORT_REGISTERED="https://snort.org/downloads/rules/snortrules-snapshot-31470.tar.gz"
+   ```
+
+3. Save and exit the file:
+   - Press `Ctrl+O` to save.
+   - Press `Ctrl+X` to exit.
+
+---
+
+#### Run PulledPork3
+
+Execute the PulledPork3 script to download and configure Snort rules:
+```bash
+sudo /usr/local/bin/pulledpork3/pulledpork.py -c /usr/local/etc/pulledpork.conf
+```
+
+---
+
+By following these steps, you have successfully configured PulledPork3 to manage Snort rules effectively. If you encounter errors, double-check the paths and configurations to ensure accuracy.
+
+
+#### Update Snort Configuration
+
+1. Open the Snort configuration file:
+   ```bash
+   sudo nano /usr/local/etc/snort/snort.lua
+   ```
+
+2. Search for the `ips` variable:
+   - Press `Ctrl+W` and type `ips` to locate it.
+
+3. Update the `include` variable to point to the PulledPork rules:
+   ```lua
+   include = "/usr/local/etc/rules/pulledpork.rules",
+   ```
+
+4. Save and exit the file:
+   - Press `Ctrl+O` to save.
+   - Press `Ctrl+X` to exit.
+
+---
+
+#### Run Snort
+
+Run Snort with the updated configuration:
+```bash
+snort --daq-dir /usr/local/lib/daq -T -c /usr/local/etc/snort/snort.lua --plugin-path /usr/local/etc/so_rules/
+```
+
+---
+
+
+
