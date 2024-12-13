@@ -757,7 +757,7 @@ sudo /usr/local/bin/pulledpork3/pulledpork.py -c /usr/local/etc/pulledpork.conf
 
 By following these steps, you have successfully configured PulledPork3 to manage Snort rules effectively. If you encounter errors, double-check the paths and configurations to ensure accuracy.
 
-
+### Pointing Snort to PulledPork Rule Directory
 #### Update Snort Configuration
 
 1. Open the Snort configuration file:
