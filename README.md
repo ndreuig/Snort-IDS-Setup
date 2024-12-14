@@ -259,7 +259,7 @@ This will install Hyperscan on your system. Hyperscan is a high-performance regu
 Note that you have already installed the required dependencies for Hyperscan, including PCRE, LuaJIT, and Boost.
 
 
-**Install Flatbuffers**
+## Install Flatbuffers
 
 Change into the snort directory:
 
@@ -320,7 +320,7 @@ This will install Flatbuffers on your system. Flatbuffers is a cross-platform se
 Note that you have already installed the required dependencies for Flatbuffers.
 
 
-**Install Data Acquisition (DAQ) from Snort**
+## Install Data Acquisition (DAQ) from Snort
 
 Change into the snort directory:
 
@@ -381,7 +381,7 @@ sudo ldconfig
 ```
 This command updates the dynamic linker's cache, ensuring the system can find the newly installed libraries.
 
-## Install Snort 3
+## Install Snort3
 
 Change into the snort directory:
 ```bash
@@ -590,7 +590,7 @@ snort --daq-dir /usr/local/lib/daq -T -c /usr/local/etc/snort/snort.lua -i eth0 
 
 
 
-## Configuring Pulled Pork for Snort Rule Management
+## Install Pulled Pork 
 
 We can start expanding our rule set by downloading free rules and to do that we will install what is called Pulled Pork which will automatically grab the rules for you.
 
@@ -654,14 +654,14 @@ To verify that Pulled Pork is running, specify the location of Pulled Pork:
 ```
 
 
-## Configuring Pulled Pork
+
 # Configuring PulledPork3 for Snort Rules Management
 
 This guide walks you through modifying the PulledPork3 configuration file and integrating it with Snort rules. Follow these steps carefully to ensure a successful setup.
 
 ---
 
-## Step 1: Edit the PulledPork Configuration File
+## Edit the PulledPork Configuration File
 
 1. Open the PulledPork configuration file with the following command:
    ```bash
@@ -707,7 +707,7 @@ This guide walks you through modifying the PulledPork3 configuration file and in
 
 ---
 
-## Step 2: Create the `so_rules` Directory
+## Create the `so_rules` Directory
 
 1. Navigate to the `/usr/local/etc` directory:
    ```bash
