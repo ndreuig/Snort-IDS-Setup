@@ -317,7 +317,6 @@ sudo make install
 
 This will install Flatbuffers on your system. Flatbuffers is a cross-platform serialization library that is used by Snort.
 
-Note that you have already installed the required dependencies for Flatbuffers.
 
 
 ## Install Data Acquisition (DAQ) from Snort
@@ -673,35 +672,50 @@ This guide walks you through modifying the PulledPork3 configuration file and in
    ```
    registered_rules=true
    ```
+   ![Table 2](./screenshots/screenshot1.png)
 
-3. Go to Snort’s website:
+   
+4. Go to Snort’s website:
    - Create and verify your Snort account if you haven't already.
    - On the left-hand side of the dashboard, find the "Oinkcode" (API code).
+     
+     ![Table 2](./screenshots/screenshot1.png)
+     
    - Copy the Oinkcode to use later.
+     
+     ![Table 2](./screenshots/screenshot1.png)
 
-4. Return to the terminal and paste your Oinkcode into the `oinkcode` field of the configuration file.
+     
+5. Return to the terminal and paste your Oinkcode into the `oinkcode` field of the configuration file.
+   
+   ![Table 2](./screenshots/screenshot1.png)
 
-5. Locate the `blocklist_path` setting and comment it out by placing a `#` at the beginning of the line, as this is not needed:
+6. Locate the `blocklist_path` setting and comment it out by placing a `#` at the beginning of the line, as this is not needed:
    ```
    #blocklist_path=/path/to/blocklist
    ```
+   
+   ![Table 2](./screenshots/screenshot1.png)
 
-6. Scroll down to the `snort_path` setting:
+   
+8. Scroll down to the `snort_path` setting:
    - Uncomment the line by removing the `#` at the beginning.
    - Verify that the path is correctly set to your Snort executable.
    ```
    snort_path=/usr/local/bin/snort
    ```
-
-7. Further down, locate the `local_rules` setting:
+   ![Table 2](./screenshots/screenshot1.png)
+   
+10. Further down, locate the `local_rules` setting:
    - Uncomment the line.
    - Ensure it points to the directory containing your local rules.
    - Remove the trailing comma and any text following it.
    ```
    local_rules=/usr/local/etc/snort/rules/local.rules
    ```
-
-8. Save and exit the file:
+   ![Table 2](./screenshots/screenshot1.png)
+  
+11. Save and exit the file:
    - Press `Ctrl+O` to save.
    - Press `Ctrl+X` to exit.
 
@@ -735,11 +749,16 @@ This guide walks you through modifying the PulledPork3 configuration file and in
 
 2. Scroll to the `RULESET_URL_SNORT_REGISTERED` setting:
    - Replace `<VERSION>` with the actual version number obtained from the Snort website.
+     
+     ![Table 2](./screenshots/screenshot1.png)
+     
    - For example, if the version is `31470`, modify the line as follows:
    ```
    RULESET_URL_SNORT_REGISTERED="https://snort.org/downloads/rules/snortrules-snapshot-31470.tar.gz"
    ```
-
+   
+   ![Table 2](./screenshots/screenshot1.png)
+   
 3. Save and exit the file:
    - Press `Ctrl+O` to save.
    - Press `Ctrl+X` to exit.
