@@ -672,30 +672,30 @@ This guide walks you through modifying the PulledPork3 configuration file and in
    ```
    registered_rules=true
    ```
-   ![Table 2](./screenshots/screenshot1.png)
+   ![Table 2](./screenshots/registeredruleset.png)
 
    
 4. Go to Snort’s website:
    - Create and verify your Snort account if you haven't already.
    - On the left-hand side of the dashboard, find the "Oinkcode" (API code).
      
-     ![Table 2](./screenshots/screenshot1.png)
+     ![Table 2](./screenshots/dashboardoinkcode.jpeg)
      
    - Copy the Oinkcode to use later.
      
-     ![Table 2](./screenshots/screenshot1.png)
+     ![Table 2](./screenshots/oinkcode.jpeg)
 
      
 5. Return to the terminal and paste your Oinkcode into the `oinkcode` field of the configuration file.
    
-   ![Table 2](./screenshots/screenshot1.png)
+   ![Table 2](./screenshots/pasteoinkcode.png)
 
 6. Locate the `blocklist_path` setting and comment it out by placing a `#` at the beginning of the line, as this is not needed:
    ```
    #blocklist_path=/path/to/blocklist
    ```
    
-   ![Table 2](./screenshots/screenshot1.png)
+   ![Table 2](./screenshots/blocklist.png)
 
    
 8. Scroll down to the `snort_path` setting:
@@ -704,7 +704,7 @@ This guide walks you through modifying the PulledPork3 configuration file and in
    ```
    snort_path=/usr/local/bin/snort
    ```
-   ![Table 2](./screenshots/screenshot1.png)
+   ![Table 2](./screenshots/snortpath.png)
    
 10. Further down, locate the `local_rules` setting:
    - Uncomment the line.
@@ -713,7 +713,7 @@ This guide walks you through modifying the PulledPork3 configuration file and in
    ```
    local_rules=/usr/local/etc/snort/rules/local.rules
    ```
-   ![Table 2](./screenshots/screenshot1.png)
+   ![Table 2](./screenshots/localrules.png)
   
 11. Save and exit the file:
    - Press `Ctrl+O` to save.
@@ -750,14 +750,14 @@ This guide walks you through modifying the PulledPork3 configuration file and in
 2. Scroll to the `RULESET_URL_SNORT_REGISTERED` setting:
    - Replace `<VERSION>` with the actual version number obtained from the Snort website.
      
-     ![Table 2](./screenshots/screenshot1.png)
+     ![Table 2](./screenshots/version31470.jpeg)
      
    - For example, if the version is `31470`, modify the line as follows:
    ```
    RULESET_URL_SNORT_REGISTERED="https://snort.org/downloads/rules/snortrules-snapshot-31470.tar.gz"
    ```
    
-   ![Table 2](./screenshots/screenshot1.png)
+   ![Table 2](./screenshots/ruleset.png)
    
 3. Save and exit the file:
    - Press `Ctrl+O` to save.
